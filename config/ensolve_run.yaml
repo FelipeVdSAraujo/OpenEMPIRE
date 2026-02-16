@@ -1,0 +1,29 @@
+use_temporary_directory: true
+automatic_file_transfer: true
+temporary_directory: ./
+forecast_horizon_year: 2030
+number_of_scenarios: 2
+length_of_regular_season: 8
+discount_rate: 0.05
+wacc: 0.05
+optimization_solver: Gurobi
+use_scenario_generation: true
+use_fixed_sample: false
+load_change_module: false
+filter_make: false
+filter_use: false
+copula_clusters_make: false
+copula_clusters_use: false
+copulas_to_use:
+  - electricload
+n_cluster: 10
+moment_matching: false
+n_tree_compare: 20
+use_emission_cap: false
+compute_operational_duals: true
+print_in_iamc_format: false
+write_in_lp_format: false
+serialize_instance: false
+north_sea: true
+leap_years_investment: 5
+time_format: "%d/%m/%Y %H:%M"
