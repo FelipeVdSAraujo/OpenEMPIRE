@@ -17,6 +17,7 @@ parser.add_argument(
 )
 parser.add_argument("-f", "--force", help="Force new run if old exist.", action="store_true")
 parser.add_argument("-c", "--config-file", help="Path to config file.", default="config/run.yaml")
+parser.add_argument("-n", "--run-name", help="Name of the run.", default="basic_run")
 
 args = parser.parse_args()
 
@@ -28,7 +29,7 @@ else:
 
 empire_config = EmpireConfiguration.from_dict(config=config)
 
-run_path = Path.cwd() / f"Results/basic_run/dataset_{args.dataset}"
+run_path = Path.cwd() / f"Results/{args.run_name}/dataset_{args.dataset}"
 
 if (run_path / "Output/results_objective.csv").exists() and not args.force:
     raise ValueError("There already exists results for this analysis run.")
