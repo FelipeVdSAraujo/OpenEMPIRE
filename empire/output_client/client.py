@@ -209,7 +209,11 @@ class EmpireOutputClient:
                 return pd.read_csv(buffer)
             else:
                 df = pd.read_csv(file)
-                return df.loc[df["Node"] == node]
+                if "Node" in df.columns:
+                    return df.loc[df["Node"] == node]
+                if "FromNode" in df.columns and "ToNode" in df.columns:
+                    return df.loc[(df["FromNode"] == node) | (df["ToNode"] == node)]
+                return df
 
         return pd.read_csv(file)
 

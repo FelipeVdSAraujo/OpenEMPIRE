@@ -17,32 +17,19 @@ parser.add_argument(
 )
 parser.add_argument("-f", "--force", help="Force new run if old exist.", action="store_true")
 parser.add_argument("-c", "--config-file", help="Path to config file.", default="config/run.yaml")
-parser.add_argument(
-    "-n",
-    "--name",
-    help="name of run",
-    default="Unnamed_run"
-)
+parser.add_argument("-n", "--run-name", help="Name of the run.", default="basic_run")
 
 args = parser.parse_args()
 
 ## Read config and setup folders ##
 if args.dataset == "test":
     config = read_config_file(Path("config/testrun.yaml"))
-    run_path = Path.cwd() / f"Results/basic_run/dataset_{args.dataset}"
-
-elif args.dataset =="uploads":
-    config = read_config_file(Path("config/ensolve_run.yaml"))#if we run the ensolve run, use this config
-    #change path if we run an ensolve run
-    run_path = Path.cwd() / f"Results/run_analysis/ensolve_{args.name}"
 else:
     config = read_config_file(Path(args.config_file))
-    run_path = Path.cwd() / f"Results/v51/ensolve_{args.name}"
 
 empire_config = EmpireConfiguration.from_dict(config=config)
 
-
-
+run_path = Path.cwd() / f"Results/{args.run_name}/dataset_{args.dataset}"
 
 if (run_path / "Output/results_objective.csv").exists() and not args.force:
     raise ValueError("There already exists results for this analysis run.")
