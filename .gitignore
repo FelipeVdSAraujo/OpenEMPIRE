@@ -4,6 +4,12 @@
 Results/
 .vscode/
 
+# Runtime dataset folders — contents are generated at run time and must not be committed.
+# The folder itself is preserved via .gitkeep so it exists after a fresh clone.
+Data handler/uploads/*
+!Data handler/uploads/.gitkeep
+Data handler/user_overrides/
+
 # Byte-compiled / optimized / DLL files
 __pycache__/
 *.py[cod]
