@@ -161,6 +161,7 @@ def setup_run_paths(
     version: str,
     empire_config: EmpireConfiguration,
     run_path: Path,
+    base_dataset_path: Path | None = None,
     empire_path: Path = Path.cwd(),
 ) -> EmpireRunConfiguration:
     """
@@ -169,12 +170,13 @@ def setup_run_paths(
     :param version: dataset version.
     :param empire_config: Empire configuration.
     :param run_path: Path containing input and output to the empire run.
+    :param base_dataset_path: Optional explicit dataset folder path. If provided, this is used instead of Data handler/{version}.
     :param empire_path: Path to empire project, optional.
     :return: Empire run configuration.
     """
 
     # Original dataset
-    base_dataset = empire_path / f"Data handler/{version}"
+    base_dataset = Path(base_dataset_path) if base_dataset_path else empire_path / f"Data handler/{version}"
 
     # Input folders
     run_name = get_run_name(empire_config=empire_config, version=version)

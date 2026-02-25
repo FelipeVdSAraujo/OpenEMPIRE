@@ -1,9 +1,12 @@
 #!/bin/bash
 set -x
 name=$1
+dataset=${2:-uploads}
+dataset_path=$3
 
 SCRIPT_DIR=$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)
 REPO_ROOT=$(cd "$SCRIPT_DIR/.." && pwd)
+config_file=${4:-"$REPO_ROOT/config/ensolve_run.yaml"}
 cd "$REPO_ROOT"
 
 # Check if empire_env is the active environment
@@ -50,6 +53,12 @@ fi
 # Print which node we are running on
 echo "Running on compute node: $(hostname)"
 
-python "$REPO_ROOT/scripts/run.py" -n "$name" -d uploads -c "$REPO_ROOT/config/ensolve_run.yaml"
+run_cmd=(python "$REPO_ROOT/scripts/run.py" -n "$name" -d "$dataset" -c "$config_file")
 
-echo "Done with starting bash script!"
+if [ -n "$dataset_path" ]; then
+    run_cmd+=(--dataset-path "$dataset_path")
+fi
+
+"${run_cmd[@]}"
+
+echo "Finished model execution script!"
