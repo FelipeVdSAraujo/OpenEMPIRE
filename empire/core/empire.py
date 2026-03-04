@@ -1339,13 +1339,11 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
 
         logger.info("Writing standard output to .csv...")
         
-        f = pd.DataFrame(columns=["model", "scenario", "region", "variable", "unit", "subannual"]+[value(2020+(i)*instance.LeapYearsInvestment) for i in instance.PeriodActive])
+        f = []
 
-        def row_write(df, region, variable, unit, subannual, input_value, scenario=Scenario, modelname=Modelname):
-            df2 = pd.DataFrame([[modelname, scenario, region, variable, unit, subannual]+input_value],
-                               columns=["model", "scenario", "region", "variable", "unit", "subannual"]+[value(2020+(i)*instance.LeapYearsInvestment) for i in instance.PeriodActive])
-            df = pd.concat([df, df2], ignore_index=True)
-            return df
+        def row_write(rows, region, variable, unit, subannual, input_value, scenario=Scenario, modelname=Modelname):
+            rows.append([modelname, scenario, region, variable, unit, subannual]+input_value)
+            return rows
 
         f = row_write(f, "Europe", "Discount rate|Electricity", "%", "Year", [value(instance.discountrate*100)]*len(instance.PeriodActive)) #Discount rate
         f = row_write(f, "Europe", "Capacity|Electricity", "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity 
@@ -1375,7 +1373,7 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
             gen_iamc = dict_generators.get(str(g), str(g))  # fallback to raw name if unmapped
             f = row_write(f, "Europe", "Capacity|Electricity|"+gen_iamc, "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for n in instance.Node if (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity per type
             f = row_write(f, "Europe", "Capital Cost|Electricity|"+gen_iamc, "US$2010/kW", "Year", [value(instance.genCapitalCost[g,i]*USD10perEUR18) for i in instance.PeriodActive]) #Capital generator cost
-            if value(instance.genMargCost[g,instance.PeriodActive[1]]) != 0: 
+            if value(instance.genMargCost[g,instance.PeriodActive.at(1)]) != 0: 
                 f = row_write(f, "Europe", "Variable Cost|Electricity|"+gen_iamc, "EUR/MWh", "Year", [value(instance.genMargCost[g,i]) for i in instance.PeriodActive])
             f = row_write(f, "Europe", "Investment|Energy Supply|Electricity|"+gen_iamc, "billion US$2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
                     sum(instance.genInvCost[g,i]*instance.genInvCap[n,g,i] for n in instance.Node if (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total generator investment cost per type
@@ -1386,6 +1384,7 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
             node_region = dict_countries_reversed.get(str(n), str(n))
             f = row_write(f, node_region, "Capacity|Electricity|"+gen_iamc, "GW", "Year", [value(instance.genInstalledCap[n,g,i]*GWperMW) for i in instance.PeriodActive]) #Installed generator capacity per country and type
         
+        f = pd.DataFrame(f, columns=["model", "scenario", "region", "variable", "unit", "subannual"]+[value(2020+(i)*instance.LeapYearsInvestment) for i in instance.PeriodActive])
         f = f.groupby(['model','scenario','region','variable','unit','subannual']).sum().reset_index() #NB! DOES NOT WORK FOR UNIT COSTS; SHOULD BE FIXED
         
         if not os.path.exists(result_file_path / 'IAMC'):
