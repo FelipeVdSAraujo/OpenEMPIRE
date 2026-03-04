@@ -37,7 +37,8 @@ if args.dataset == "test":
     run_path = Path.cwd() / f"Results/basic_run/dataset_{args.dataset}"
 
 elif args.dataset =="uploads":
-    config = read_config_file(Path("config/ensolve_run.yaml"))#if we run the ensolve run, use this config
+    config = read_config_file(Path("config/testrun.yaml"))#if we run the ensolve run, use this config
+    #config = read_config_file(Path("config/ensolve_run.yaml"))#if we run the ensolve run, use this config
     #change path if we run an ensolve run
     run_path = Path.cwd() / f"Results/run_analysis/ensolve_{args.name}"
 else:
