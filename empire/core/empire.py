@@ -1254,12 +1254,13 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
         
         Modelname = "EMPIRE"
         Scenario = "1.5degree"
+        EMPIRE_REGION_PREFIX = "EMPIRE v1.0.0/v51"
 
         dict_countries = {"Austria": "Austria",
                           "Bosnia and Herzegovina": "BosniaH",
                           "Belgium": "Belgium", "Bulgaria": "Bulgaria",
                           "Switzerland": "Switzerland", 
-                          "Czech Republic": "CzechR", "Germany": "Germany",
+                          "Czechia": "CzechR", "Germany": "Germany",
                           "Denmark": "Denmark", "Estonia": "Estonia", 
                           "Spain": "Spain", "Finland": "Finland",
                           "France": "France", "United Kingdom": "GreatBrit.",
@@ -1268,27 +1269,30 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
                           "Italy": "Italy", "Lithuania": "Lithuania",
                           "Luxembourg": "Luxemb.", "Latvia": "Latvia",
                           "North Macedonia": "Macedonia", 
-                          "The Netherlands": "Netherlands", "Norway": "Norway",
+                          "Netherlands": "Netherlands", "Norway": "Norway",
                           "Poland": "Poland", "Portugal": "Portugal",
                           "Romania": "Romania", "Serbia": "Serbia", 
                           "Sweden": "Sweden", "Slovenia": "Slovenia",
-                          "Slovakia": "Slovakia", "Norway|Ostland": "NO1", 
-                          "Norway|Sorland": "NO2", "Norway|Norgemidt": "NO3",
-                          "Norway|Troms": "NO4", "Norway|Vestmidt": "NO5",
-                          "North Sea|Moray Firth": "MorayFirth",
-                          "North Sea|Firth of Forth": "FirthofForth",
-                          "North Sea|Dogger Bank": "DoggerBank",
-                          "North Sea|Hornsea": "Hornsea",
-                          "North Sea|Outer Dowsing": "OuterDowsing",
-                          "North Sea|Norfolk": "Norfolk",
-                          "North Sea|East Anglia": "EastAnglia",
-                          "North Sea|Borssele": "Borssele",
-                          "North Sea|Hollandsee Kust": "HollandseeKust",
-                          "North Sea|Helgolander Bucht": "HelgolanderBucht",
-                          "North Sea|Nordsoen": "Nordsoen",
-                          "North Sea|Utsira Nord": "UtsiraNord",
-                          "North Sea|Sorlige Nordsjo I": "SorligeNordsjoI",
-                          "North Sea|Sorlige Nordsjo II": "SorligeNordsjoII"}
+                          "Slovakia": "Slovakia",
+                          f"{EMPIRE_REGION_PREFIX}|Norway|Ostland": "NO1",
+                          f"{EMPIRE_REGION_PREFIX}|Norway|Sorland": "NO2",
+                          f"{EMPIRE_REGION_PREFIX}|Norway|Norgemidt": "NO3",
+                          f"{EMPIRE_REGION_PREFIX}|Norway|Troms": "NO4",
+                          f"{EMPIRE_REGION_PREFIX}|Norway|Vestmidt": "NO5",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Moray Firth": "MorayFirth",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Firth of Forth": "FirthofForth",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Dogger Bank": "DoggerBank",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Hornsea": "Hornsea",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Outer Dowsing": "OuterDowsing",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Norfolk": "Norfolk",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|East Anglia": "EastAnglia",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Borssele": "Borssele",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Hollandsee Kust": "HollandseeKust",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Helgolander Bucht": "HelgolanderBucht",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Nordsoen": "Nordsoen",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Utsira Nord": "UtsiraNord",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Sorlige Nordsjo I": "SorligeNordsjoI",
+                          f"{EMPIRE_REGION_PREFIX}|North Sea|Sorlige Nordsjo II": "SorligeNordsjoII"}
 
         dict_countries_reversed = dict([reversed(i) for i in dict_countries.items()])
 
@@ -1359,40 +1363,40 @@ def run_empire(name, tab_file_path: Path, result_file_path: Path, scenario_data_
             rows.append([modelname, scenario, region, variable, unit, subannual]+input_value)
             return rows
 
-        f = row_write(f, "Europe", "Discount Rate|Electricity", "%", "Year", [value(instance.discountrate*100)]*len(instance.PeriodActive)) #Discount rate
-        f = row_write(f, "Europe", "Capacity|Electricity", "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity 
-        f = row_write(f, "Europe", "Investment|Energy Supply|Electricity", "billion US$2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
+        f = row_write(f, "Europe (excl. Turkey)", "Discount Rate|Electricity", "%", "Year", [value(instance.discountrate*100)]*len(instance.PeriodActive)) #Discount rate
+        f = row_write(f, "Europe (excl. Turkey)", "Capacity|Electricity", "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity 
+        f = row_write(f, "Europe (excl. Turkey)", "Investment|Energy Supply|Electricity", "billion USD_2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
                     sum(instance.genInvCost[g,i]*instance.genInvCap[n,g,i] for (n,g) in instance.GeneratorsOfNode) + \
                     sum(instance.transmissionInvCost[n1,n2,i]*instance.transmisionInvCap[n1,n2,i] for (n1,n2) in instance.BidirectionalArc) + \
                     sum((instance.storPWInvCost[b,i]*instance.storPWInvCap[n,b,i]+instance.storENInvCost[b,i]*instance.storENInvCap[n,b,i]) for (n,b) in instance.StoragesOfNode)) for i in instance.PeriodActive]) #Total European investment cost (gen+stor+trans)
-        f = row_write(f, "Europe", "Investment|Energy Supply|Electricity|Electricity Storage", "billion US$2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
+        f = row_write(f, "Europe (excl. Turkey)", "Investment|Energy Supply|Electricity|Electricity Storage", "billion USD_2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
                     sum((instance.storPWInvCost[b,i]*instance.storPWInvCap[n,b,i]+instance.storENInvCost[b,i]*instance.storENInvCap[n,b,i]) for (n,b) in instance.StoragesOfNode)) for i in instance.PeriodActive]) #Total European storage investment cost
-        f = row_write(f, "Europe", "Investment|Energy Supply|Electricity|Transmission and Distribution", "billion US$2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
+        f = row_write(f, "Europe (excl. Turkey)", "Investment|Energy Supply|Electricity|Transmission and Distribution", "billion USD_2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
                     sum(instance.transmissionInvCost[n1,n2,i]*instance.transmisionInvCap[n1,n2,i] for (n1,n2) in instance.BidirectionalArc)) for i in instance.PeriodActive]) #Total European transmission investment cost
         for w in instance.Scenario:
-            f = row_write(f, "Europe", "Emissions|CO2|Energy|Supply|Electricity", "Mt CO2/yr", "Year", [value(Mtonperton*sum(instance.seasScale[s]*instance.genCO2TypeFactor[g]*(GJperMWh/instance.genEfficiency[g,i])* \
+            f = row_write(f, "Europe (excl. Turkey)", "Emissions|CO2|Energy|Supply|Electricity", "Mt CO2/yr", "Year", [value(Mtonperton*sum(instance.seasScale[s]*instance.genCO2TypeFactor[g]*(GJperMWh/instance.genEfficiency[g,i])* \
                     instance.genOperational[n,g,h,i,w] for (n,g) in instance.GeneratorsOfNode for (s,h) in instance.HoursOfSeason)) for i in instance.PeriodActive], Scenario+"|"+str(w)) #Total European emissions per scenario
-            f = row_write(f, "Europe", "Secondary Energy|Electricity", "EJ/yr", "Year", \
+            f = row_write(f, "Europe (excl. Turkey)", "Secondary Energy|Electricity", "EJ/yr", "Year", \
                     [value(sum(EJperMWh*instance.seasScale[s]*instance.genOperational[n,g,h,i,w] for (n,g) in instance.GeneratorsOfNode for (s,h) in instance.HoursOfSeason)) for i in instance.PeriodActive], Scenario+"|"+str(w)) #Total European generation per scenario
             for g in instance.Generator:
                 gen_iamc = dict_generators.get(str(g), str(g))
-                f = row_write(f, "Europe", "Secondary Energy|Electricity|"+gen_iamc, "EJ/yr", "Year", \
+                f = row_write(f, "Europe (excl. Turkey)", "Secondary Energy|Electricity|"+gen_iamc, "EJ/yr", "Year", \
                     [value(sum(EJperMWh*instance.seasScale[s]*instance.genOperational[n,g,h,i,w] for n in instance.Node if (n,g) in instance.GeneratorsOfNode for (s,h) in instance.HoursOfSeason)) for i in instance.PeriodActive], Scenario+"|"+str(w)) #Total generation per type and scenario
             for (s,h) in instance.HoursOfSeason:
                 for n in instance.Node:
                     node_region = dict_countries_reversed.get(str(n), str(n))
-                    f = row_write(f, node_region, "Price|Secondary Energy|Electricity", "US$2010/GJ", seasonhours[h-1], \
+                    f = row_write(f, node_region, "Price|Secondary Energy|Electricity", "USD_2010/GJ", seasonhours[h-1], \
                         [value(instance.dual[instance.FlowBalance[n,h,i,w]]/(GJperMWh*instance.operationalDiscountrate*instance.seasScale[s]*instance.sceProbab[w])) for i in instance.PeriodActive], Scenario+"|"+str(w)+str(s))
         for g in instance.Generator:
             gen_iamc = dict_generators.get(str(g), str(g))  # fallback to raw name if unmapped
-            f = row_write(f, "Europe", "Capacity|Electricity|"+gen_iamc, "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for n in instance.Node if (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity per type
-            f = row_write(f, "Europe", "Capital Cost|Electricity|"+gen_iamc, "US$2010/kW", "Year", [value(instance.genCapitalCost[g,i]*USD10perEUR18) for i in instance.PeriodActive]) #Capital generator cost
+            f = row_write(f, "Europe (excl. Turkey)", "Capacity|Electricity|"+gen_iamc, "GW", "Year", [value(sum(instance.genInstalledCap[n,g,i]*GWperMW for n in instance.Node if (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total European installed generator capacity per type
+            f = row_write(f, "Europe (excl. Turkey)", "Capital Cost|Electricity|"+gen_iamc, "USD_2010/kW", "Year", [value(instance.genCapitalCost[g,i]*USD10perEUR18) for i in instance.PeriodActive]) #Capital generator cost
             if value(instance.genMargCost[g,instance.PeriodActive.at(1)]) != 0: 
-                f = row_write(f, "Europe", "Variable Cost|Electricity|"+gen_iamc, "EUR/MWh", "Year", [value(instance.genMargCost[g,i]) for i in instance.PeriodActive])
-            f = row_write(f, "Europe", "Investment|Energy Supply|Electricity|"+gen_iamc, "billion US$2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
+                f = row_write(f, "Europe (excl. Turkey)", "Variable Cost|Electricity|"+gen_iamc, "EUR/MWh", "Year", [value(instance.genMargCost[g,i]) for i in instance.PeriodActive])
+            f = row_write(f, "Europe (excl. Turkey)", "Investment|Energy Supply|Electricity|"+gen_iamc, "billion USD_2010/yr", "Year", [value((1/instance.LeapYearsInvestment)*USD10perEUR18* \
                     sum(instance.genInvCost[g,i]*instance.genInvCap[n,g,i] for n in instance.Node if (n,g) in instance.GeneratorsOfNode)) for i in instance.PeriodActive]) #Total generator investment cost per type
             if value(instance.genCO2TypeFactor[g]) != 0:
-                f = row_write(f, "Europe", "Emission Rate|CO2|Energy|Supply|Electricity|"+gen_iamc, "t CO2/MWh", "Year", [value(instance.genCO2TypeFactor[g]*(GJperMWh/instance.genEfficiency[g,i])) for i in instance.PeriodActive]) #CO2 emission rate per generator type
+                f = row_write(f, "Europe (excl. Turkey)", "Emission Rate|CO2|Energy|Supply|Electricity|"+gen_iamc, "t CO2/MWh", "Year", [value(instance.genCO2TypeFactor[g]*(GJperMWh/instance.genEfficiency[g,i])) for i in instance.PeriodActive]) #CO2 emission rate per generator type
         for (n,g) in instance.GeneratorsOfNode:
             gen_iamc = dict_generators.get(str(g), str(g))
             node_region = dict_countries_reversed.get(str(n), str(n))
