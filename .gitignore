@@ -9,6 +9,7 @@ Results/
 Data handler/uploads/*
 !Data handler/uploads/.gitkeep
 Data handler/user_overrides/
+Data handler/saved_datasets/*
 
 # Byte-compiled / optimized / DLL files
 __pycache__/
